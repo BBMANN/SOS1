@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOS1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+  <style>
+    body[data-theme="white"] {
+      --color-bg: #ffffff;
+      --color-text: #000000;
+      --bcg: url('обои.png');
+      --zatemnenie: #ffffffb1;
+    }
+
+    body[data-theme="dark"] {
+      --color-bg: #1b1c3a;
+      --color-text: #f1f1f1;
+      --bcg: url('темн фон.png');
+      --zatemnenie: #000000b1;
+    }
+
+    * { margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Geologica', sans-serif;
+      color: var(--color-text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slider {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slider::-webkit-scrollbar { display: none; }
+
+    .screen {
+      height: 100vh;
+      width: 100%;
+      background-image: var(--bcg);
+      background-size: cover;
+      background-position: center;
+      scroll-snap-align: start;
+      position: relative;
+    }
+
+    .zatemnka {
+      position: absolute;
+      inset: 0;
+      background-color: var(--zatemnenie);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      padding-top: 70px; padding-bottom: 70px;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        height: 35px;
+        width: 100%;
+        z-index: 100;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 10px; padding-right: 10px;
+        font-size: 17px;
+        color: var(--color-text);
+    }
+
+    .gadgets {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px;
+        max-height: 100%;
+        overflow-y: auto;
+        border-radius: 20px;
+    }
+
+    .gadget {
+        flex: 0 0 calc(50% - 5px);
+        height: 220px;
+        background-color: var(--color-bg);
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .gadgets::-webkit-scrollbar { display: none; }
+    .gadgets {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .mainscr {
+        box-sizing: border-box;
+        padding: 15px;
+        padding-top: 45px;
+    }
+
+    .gadget-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: auto;
+        font-size: 12px;
+    }
+
+    .gadget-header span {
+        padding: 4px;
+        background-color: var(--color-text);
+        color: white;
+        border-radius: 10px;
+    }
+
+            .toggle-switch {
+                display: inline-flex;
+                align-items: center;
+                cursor: pointer;
+            }
+            .toggle-switch input {
+                display: none;
+            }
+            .toggle-switch .slider {
+                width: 72px;
+                height: 32.5px;
+                background: none;
+                border-radius: 20px;
+                position: relative;
+                transition: 0.4s;
+                margin-left: 10px;
+                border: 1.25px solid var(--color-bg);
+            }
+            .toggle-switch .slider::before {
+                content: "";
+                position: absolute;
+                width: 30px;
+                height: 30px;
+                background: white;
+                border-radius: 50%;
+                top: 1px;
+                left: 1px;
+                transition: 0.4s;
+            }
+            .toggle-switch input:checked + .slider {
+                background: none;
+                border: 1.25px solid #08ac18;
+            }
+            .toggle-switch input:checked + .slider::before {
+                transform: translateX(40px);
+            }
+
+            #wifiButton {
+                background: transparent;
+                border: none;
+                font-size: 24px;
+                color: var(--color-text);
+                border: 1px solid var(--color-text);
+                width: 50px; height: 50px;
+                cursor: pointer;
+                border-radius: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+            #wifiButton.active {
+                border-color: #08ac18;
+            }
+
+            .tema {
+                flex: 1;
+                padding: 12px;
+                text-align: center;
+                box-sizing: border-box;
+                background-color: #ff000000;
+                color: var(--color-text);
+                border-radius: 30px;
+                font-family: 'Geologica', sans-serif;
+                font-weight: 300;
+                border: 1px solid var(--color-text);
+                transition: all 0.3s;
+            }
+
+            input[type="range"] {
+                width: 100%;
+                -webkit-appearance: none;
+                background: transparent;
+                margin: 10px 0;
+                margin-top: 25px;
+                transition: all 0.3s;
+            }
+
+            input[type="range"]:focus {
+                outline: none;
+            }
+
+            input[type="range"]::-webkit-slider-runnable-track {
+                height: 1.25px;
+                background: var(--color-text);
+                border-radius: 2px;
+                transition: all 0.3s;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                margin-top: -7px;
+                width: 15px;
+                height: 15px;
+                background: var(--color-text);
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.3s;
+                transition: transform 0.2s ease;
+            }
+            
+            input[type="range"]::-moz-range-track {
+                height: 1.25px;
+                background: var(--color-text);
+                border-radius: 2px;
+                transition: all 0.3s;
+            }
+
+            input[type="range"]::-moz-range-thumb {
+                width: 15px;
+                height: 15px;
+                background: var(--color-text);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+  </style>
+</head>
+<body data-theme="white" >
+
+    <header>
+        <p style="transition: all 0.3s;" id="clock"></p>
+        <div style="transition: all 0.3s;" style="display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-envelope"></i>
+        </div>
+    </header>
+
+  <div class="slider" id="slider">
+    <div class="screen">
+      <div style="transition: all 0.3s;" class="zatemnka">
+
+        <div style="width: 100%; display: flex; align-items: start; justify-content: space-evenly; flex-wrap: wrap; gap: 15px;">
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-wifi"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">WI-FI</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-globe"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Моб. данные</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-server"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Облако</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-network-wired"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Раздача</p> 
+            </div>
+            <div onclick="alert('Отлично, теперь прикрепи свою карту к телефону под чехлом');" style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-wallet"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">NFC</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-lightbulb"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Фонарик</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-bolt-lightning"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Быстрый Заряд</p> 
+            </div>
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-location-dot"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">GPS</p> 
+            </div>
+
+        </div>
+        <div style="width: 100%; display: flex; align-items: start; justify-content: space-evenly; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
+            <button onclick="white()" class="tema">Светлая тема</button>
+            <button onclick="dark()" class="tema">Темная тема</button>
+        </div>
+
+        <input type="range" id="brightnessSlider" min="50" max="100" value="100">
+        <script>
+            const brightnessSlider = document.getElementById("brightnessSlider");
+            brightnessSlider.addEventListener("input", () => {
+                document.body.style.filter = `brightness(${brightnessSlider.value}%)`;
+            });
+        </script>
+        <div style="width: 100%; display: flex; align-items: start; justify-content: space-evenly; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
+            <div style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-wifi"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Найти без пароля</p> 
+            </div>
+            <div onclick="window.location.href = 'zametki.html';" style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-list"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Заметка</p> 
+            </div>
+            <div onclick="window.location.href = 'obnovi.html';" style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-upload"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Обновы</p> 
+            </div>
+            <div onclick="window.location.href = 'razrabi.html';" style="text-align: center; width: 50px;">
+               <button id="wifiButton" onclick="this.classList.toggle('active')">
+                <i class="fas fa-code"></i>
+                </button>
+                <p style="margin-top: 5px; font-weight: 200; font-size: 12px;">Для разрабов</p> 
+            </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen mainscr">
+        <div class="gadgets">
+
+        <div onclick="window.location.href = 'messages/messages.html';" style="background: linear-gradient(to left top, var(--color-bg), 85%, #00c8ff);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #00c8ff, #2d8bce);"><i class="fas fa-envelope"></i></span>
+            <p>Сообщения</p>
+            </div>
+            <h1 style="color: var(--color-text); margin-top: 20px; font-weight: 500;"><i class="far fa-comment"></i> 1</h1>
+            <p style="color: var(--color-text); font-weight: 350; margin-top: 5px;">Новых Сообщений</p>
+            <a style="display: flex; align-items: center; justify-content: center; width: 100%; height: 30px; font-weight: 200; text-decoration: none; border: 1.25px solid var(--color-text); color: var(--color-text); border-radius: 15px; margin-top: 40px;" href="messages/messages.html">Прочесть</a>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #ffba4b);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #ffba4b, rgb(253, 167, 29));"><i class="fas fa-calendar"></i></span>
+            <p>Календарь</p>
+            </div>
+            <p style="color: var(--color-text); font-weight: 350; margin-top: 20px;">Дата сегодня:</p>
+            <p style="margin-top: 5px;" id="datat"></p>
+            <p style="color: var(--color-text); font-weight: 350; margin-top: 10px;">Время сейчас:</p>
+            <p style="margin-top: 5px;" id="timet"></p>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #e45fff);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #e45fff, rgb(198, 76, 255));"><i class="fas fa-gear"></i></span>
+            <p>Настройки</p>
+            </div>
+            <p style="margin-top: 15px; font-weight: 350; font-size: 15px;">Смените тему вашего смартфона в любой момент!</p>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #08ec91);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #08ec91, #08ac18);"><i class="fas fa-arrow-trend-up"></i></span>
+            <p>Финансы</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 15px; font-weight: 350;">Цена доллара:</p>
+            <h2 style="margin-top: 5px; font-weight: 400;">538₸</h2>
+           <p style="margin-top: 15px; font-size: 15px; font-weight: 350;">Цена тенге:</p>
+            <h2 style="margin-top: 5px; font-weight: 400;">0,0019$</h2>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #fffc5f);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #fffc5f, rgb(255, 191, 30));"><i class="fas fa-list"></i></span>
+            <p>Заметки</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 15px; font-weight: 350;">Скоро важное событие!</p>
+            <a style="display: inline-block; margin-top: 10px; font-size: 15px; text-decoration: none; color: var(--color-text); font-weight: 350; border: 1px solid var(--color-text); padding: 5px 10px; border-radius: 10px;" href="#">Добавить заметку</a>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #0ecfff);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #0ecfff, rgb(27, 141, 255));"><i class="fas fa-cloud"></i></span>
+            <p>Погода</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 15px; font-weight: 350;">Температура: Тепло, бля буду</p>
+            <p style="margin-top: 15px; font-size: 15px; font-weight: 350;">Небо: Солнце светит, нег...</p>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #ff0b75);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #ff2756, #ff0b75);"><i class="fas fa-camera"></i></span>
+            <p>Камера</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 17px; font-weight: 350;">Вспомните яркие моменты вашей жизни!</p>
+        </div>
+
+        <div style="background: linear-gradient(to left top, var(--color-bg), 85%, #0752f6);" class="gadget">
+            <div class="gadget-header">
+            <span style="background: linear-gradient(to left top, #0752f6, rgb(95, 30, 237));"><i class="fas fa-location-dot"></i></span>
+            <p>Карты</p>
+            </div>
+            <img src="map-placeholder.png" alt="Карта" style="width:100%; height:auto; border-radius:10px; margin-top:10px;">
+            <p style="text-align: left; font-size: 12.5px; margin-top: 5px; font-weight: 350;">Вы находитесь рядом с точкой интереса</p>
+        </div>
+
+        </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener("load", () => {
+      const slider = document.getElementById("slider");
+      slider.scrollTo({ top: slider.scrollHeight, behavior: "instant" });
+    });
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, "00");
+    const minutes = currentTime.getMinutes().toString().padStart(2, "00");
+    document.getElementById("clock").textContent = `${hours}:${minutes}`;
+
+    setInterval(() => {
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, "00");
+    const minutes = currentTime.getMinutes().toString().padStart(2, "00");
+    document.getElementById("clock").textContent = `${hours}:${minutes}`;
+
+    const day = currentTime.getDate();
+    const month = currentTime.getMonth() + 1;
+
+    const formattedDay = day < 10 ? '0' + day : day;
+    const formattedMonth = month < 10 ? '0' + month : month;
+
+    document.getElementById("datat").textContent = formattedDay + '.' + formattedMonth;
+    document.getElementById("timet").textContent = `${hours}:${minutes}`;
+
+    }, 1000);
+
+    const day = currentTime.getDate();
+    const month = currentTime.getMonth() + 1;
+
+    const formattedDay = day < 10 ? '0' + day : day;
+    const formattedMonth = month < 10 ? '0' + month : month;
+
+    document.getElementById("datat").textContent = formattedDay + '.' + formattedMonth;
+    document.getElementById("timet").textContent = `${hours}:${minutes}`;
+  </script>
+  <script>
+    let theme = localStorage.getItem('Theme');
+
+    if (theme === "white") {
+        document.body.setAttribute("data-theme", "white");
+    } else {
+        document.body.setAttribute("data-theme", "dark");
+    }
+
+    function white() {
+        localStorage.setItem('Theme', 'white');
+        document.body.setAttribute("data-theme", "white");
+    }
+    function dark() {
+        localStorage.setItem('Theme', 'dark');
+        document.body.setAttribute("data-theme", "dark");
+    }
+  </script>
+  
+</body>
+</html>
